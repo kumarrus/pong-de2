@@ -1,0 +1,5 @@
+# Nios project files
+*.ncf
+*.elf
+*.o
+*.srec
