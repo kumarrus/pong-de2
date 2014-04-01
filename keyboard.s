@@ -1,5 +1,3 @@
-.include "Nios_macros.s"
-
 .equ keyboard, 0x10000100
 .equ gled, 0x10000010
 .equ timer, 0x10002000
@@ -59,26 +57,23 @@ ISR:
 	eret
 
 .section .text
-.global _start
+.global keyboard_start
 
-_start:
+keyboard_start:
 
-movia r19, keyboard
-movia r20, gled
+	movia r19, keyboard
+	movia r20, gled
 
-#enable interrupts for keyboard
-addi r21, r0, 0x1
-stwio r21, 4(r19)
+	#enable interrupts for keyboard
+	addi r21, r0, 0x1
+	stwio r21, 4(r19)
 
-#enable CPU interrupt from IRQ line 7
-addi r21, r0, 128
-wrctl ctl3, r21
+	#enable CPU interrupt from IRQ line 7
+	addi r21, r0, 128
+	wrctl ctl3, r21
 
-#enable cpu interrupt
-addi r21, r0, 0x1
-wrctl ctl0, r21
-
-#wait for keyboard interrupt
-loop:
-	br loop
-
+	#enable cpu interrupt
+	addi r21, r0, 0x1
+	wrctl ctl0, r21
+	
+	ret

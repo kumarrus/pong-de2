@@ -54,6 +54,10 @@ BALL_X_SPEED:
 	.word 1
 BALL_Y_SPEED:
 	.word 1
+PADDLE_1_DIR:
+	.word 1
+PADDLE_2_DIR:
+	.word -1
 
 .section .text
 .global main
@@ -68,7 +72,7 @@ main:
 	call erase_screen
 	movi r4, 0
 	movi r5, 0
-	
+	call keyboard_start
 	infinite_loop:
 		call move_paddle_1
 		call move_paddle_2
@@ -88,13 +92,21 @@ move_paddle_1:
 	increment_y_1:	
 		movia r16, PADDLE_1_Y
 		ldw r15, 0(r16)
+		
+		movia r16, PADDLE_1_DIR
+		ldw r17, 0(r16)
+		add r15, r15, r17
+		
 		movi r17, MAX_Y
 		subi r17, r17, SIZE_PADDLE_Y
 		subi r17, r17, 1
 		
-		move_down_1:
-			bge r15, r17, reset_1
-			addi r15, r15, 1
+		move_1:
+			bge r15, r17, paddle_1_draw
+			ble r15, r0, paddle_1_draw
+			
+			movia r16, PADDLE_1_Y
+			#addi r15, r15, 1
 			stw r15, 0(r16)
 		br paddle_1_draw
 
@@ -140,13 +152,19 @@ move_paddle_2:
 	increment_y_2:	
 		movia r16, PADDLE_2_Y
 		ldw r15, 0(r16)
+		
+		movia r16, PADDLE_2_DIR
+		ldw r17, 0(r16)
+		add r15, r15, r17
+		
 		movi r17, MAX_Y
 		subi r17, r17, SIZE_PADDLE_Y
 		subi r17, r17, 1
 		
-		move_up_2:
-			ble r15, r0, reset_2
-			addi r15, r15, -1
+		move_2:
+			bge r15, r17, paddle_1_draw
+			ble r15, r0, paddle_1_draw
+			#addi r15, r15, -1
 			stw r15, 0(r16)
 		br paddle_2_draw
 
