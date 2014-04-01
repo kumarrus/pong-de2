@@ -19,7 +19,7 @@ ISR:
 	
 	#check keyboard for valid input (it is up/down/left/right) if so, light led
 	movi r22, 0x1D
-	beq r21, r22, player1up 		#w  1D
+	beq r21, r22, player1up 	#w  1D
 	movi r22, 0x1B
 	beq r21, r22, player1down	#s  1B
 	movi r22, 0x75
@@ -32,21 +32,33 @@ ISR:
 		movia r23, gled
 		movi r22, 0x1
 		stwio r22, 0(r23)
+		movia r19, PADDLE_1_DIR
+		addi r20, r0, 0x1
+		ldw r20, 0(r19)
 		br notMatched
 	player1down:
 		movia r23, gled
 		movi r22, 0x2
 		stwio r22, 0(r23)
+		movia r19, PADDLE_1_DIR
+		subi r20, r0, 0x1
+		ldw r20, 0(r19)
 		br notMatched
 	player2up:
 		movia r23, gled
 		movi r22, 0x3
 		stwio r22, 0(r23)
+		movia r19, PADDLE_2_DIR
+		addi r20, r0, 0x1
+		ldw r20, 0(r19)
 		br notMatched
 	player2down:
 		movia r23, gled
 		movi r22, 0x4
 		stwio r22, 0(r23)
+		movia r19, PADDLE_1_DIR
+		subi r20, r0, 0x1
+		ldw r20, 0(r19)
 	
 	notMatched:
 		#check if there are still values left to read, if so go to begin
