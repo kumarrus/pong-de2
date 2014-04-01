@@ -65,7 +65,6 @@ _start:
 
 movia r19, keyboard
 movia r20, gled
-movia r
 
 #enable interrupts for keyboard
 addi r21, r0, 0x1
