@@ -26,6 +26,7 @@
 
 .equ ADDR_VGA, 0x08000000
 .equ ADDR_CHAR, 0x09000000
+.equ COL_BLACK, 0x0000
 
 .global draw_rect
 

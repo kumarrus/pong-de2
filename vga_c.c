@@ -15,3 +15,19 @@ void erase_screen() {
 	}
   }
 }
+
+/*
+int main() {
+	__asm__( "movia sp, 0x007ffffc		#0x17fff80\n"
+             "call erase_screen\n"
+             "movi r21, 0\n"
+			 "movi r4, 0\n"
+			 "movi r5, 0\n"
+			 "infinite_loop:\n"
+			 "call move_paddle_1\n"
+			 "call move_paddle_2\n"
+			 "call move_ball\n"
+			 "br infinite_loop\n"
+    );
+}
+*/
