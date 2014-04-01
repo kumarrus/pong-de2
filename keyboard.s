@@ -1,6 +1,8 @@
+#Uses registers r19-r23
+
 .equ keyboard, 0x10000100
 .equ gled, 0x10000010
-.equ timer, 0x10002000
+#.equ timer, 0x10002000
 
 .section .exceptions, "ax"
 ISR:
@@ -33,7 +35,7 @@ ISR:
 		movi r22, 0x1
 		stwio r22, 0(r23)
 		movia r19, PADDLE_1_DIR
-		addi r20, r0, 0x1
+		addi r20, r0, 0x2
 		ldw r20, 0(r19)
 		br notMatched
 	player1down:
@@ -49,7 +51,7 @@ ISR:
 		movi r22, 0x3
 		stwio r22, 0(r23)
 		movia r19, PADDLE_2_DIR
-		addi r20, r0, 0x1
+		addi r20, r0, 0x8
 		ldw r20, 0(r19)
 		br notMatched
 	player2down:
@@ -57,7 +59,7 @@ ISR:
 		movi r22, 0x4
 		stwio r22, 0(r23)
 		movia r19, PADDLE_1_DIR
-		subi r20, r0, 0x1
+		subi r20, r0, 0x4
 		ldw r20, 0(r19)
 	
 	notMatched:
