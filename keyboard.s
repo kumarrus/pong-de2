@@ -58,7 +58,7 @@ ISR:
 		movia r23, gled
 		movi r22, 0x4
 		stwio r22, 0(r23)
-		movia r19, PADDLE_1_DIR
+		movia r19, PADDLE_2_DIR
 		subi r20, r0, 0x1
 		stw r20, 0(r19)
 	

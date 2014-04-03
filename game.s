@@ -48,7 +48,7 @@ PADDLE_1_Y:
 PADDLE_2_X:
 	.word 311
 PADDLE_2_Y:
-	.word 0
+	.word 10
 BALL_X:
 	.word 16
 BALL_Y:
