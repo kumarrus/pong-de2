@@ -27,7 +27,7 @@
 #.include "nios_macros.s"
 
 .equ TIMER, 0x10002000
-.equ PERIOD, 300000
+.equ PERIOD, 10000000
 .equ MAX_X, 320
 .equ MAX_Y, 240
 .equ SIZE_BALL_X, 3
@@ -39,6 +39,8 @@
 
 .global PADDLE_1_DIR
 .global PADDLE_2_DIR
+.global BALL_X_SPEED
+.global BALL_Y_SPEED
 
 .section .data
 PADDLE_1_X:
@@ -75,6 +77,7 @@ main:
 	call erase_screen
 	movi r4, 0
 	movi r5, 0
+	call timer_set
 	call keyboard_start
 	infinite_loop:
 		call move_paddle_1
@@ -134,7 +137,7 @@ move_paddle_1:
 		stw r15, 16(sp)
 		
 		call draw_rect
-		call timer
+		call delay_counter
 
 	ldw ra, 20(sp)
 	addi sp, sp, 24
@@ -194,7 +197,7 @@ move_paddle_2:
 		stw r15, 16(sp)
 		
 		call draw_rect
-		call timer
+		call delay_counter
 
 	ldw ra, 20(sp)
 	addi sp, sp, 24
@@ -358,7 +361,7 @@ move_ball:
 		stw r15, 16(sp)
 		
 		call draw_rect
-		call timer
+		call delay_counter
 
 	ldw ra, 20(sp)
 	addi sp, sp, 24
@@ -366,20 +369,45 @@ move_ball:
 	ret
 
 	
-timer: 
+#timer: 
+#	movia r8,TIMER
+#	movui r15,%lo(PERIOD)
+#	stwio r15,8(r8)
+#	movui r15,%hi(PERIOD)
+#	stwio r15,12(r8)
+#
+#	stwio r0,0(r8)
+#	movui r15,0x6
+#	stwio r15,4(r8)
+#
+#	pollt: 
+#		ldwio r15,0(r8)
+#		andi r15,r15,0x1
+#		beq r15,r0,pollt
+#   
+#	ret
+
+timer_set: 
 	movia r8,TIMER
 	movui r15,%lo(PERIOD)
 	stwio r15,8(r8)
 	movui r15,%hi(PERIOD)
 	stwio r15,12(r8)
 
+	# enable interrupts on timer
 	stwio r0,0(r8)
-	movui r15,0x6
+	movui r15,0x7
 	stwio r15,4(r8)
-
-	pollt: 
-		ldwio r15,0(r8)
-		andi r15,r15,0x1
-		beq r15,r0,pollt
-   
+	
+	# Enable IRQ line
+	#movi r21, 0b1 #IRQ0 for timer
+	#wrctl ctl3, r21 #ctl3 - ienable
+	ret
+	
+delay_counter:
+	movi r15,500000 /* set starting point for delay counter */
+	DELAYG:
+		subi r15,r15,1       /* subtract 1 from delay */
+		bne r15,r0, DELAYG   /* continue subtracting if delay has not elapsed */
+			
 	ret

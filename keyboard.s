@@ -2,10 +2,41 @@
 
 .equ keyboard, 0x10000100
 .equ gled, 0x10000010
-#.equ timer, 0x10002000
+.equ TIMER, 0x10002000
 
 .section .exceptions, "ax"
 ISR:
+	subi sp, sp, 12 # To save ea, et, ctl1
+	stw et, 0(sp)
+	rdctl et, ctl1
+	stw et, 4(sp)
+	stw ea, 8(sp)
+	rdctl et, ctl4
+	andi et, et, 0x1         #Check if interrupt has been triggered on IRQ0, Priority = 1
+	bne et, r0, TIMER_INT
+	rdctl et, ctl4
+	andi et, et, 0x80       #Check if interrupt has been triggered on IRQ7, Priority = 2
+	bne et, r0, KEY_INT
+	br EXIT_ISR
+	
+TIMER_INT:
+	movia r19, BALL_X_SPEED
+	ldw r20, 0(r19)
+	addi r20, r20, 0x1
+	stw r20, 0(r19)
+	
+	movia r19, BALL_Y_SPEED
+	ldw r20, 0(r19)
+	addi r20, r20, 0x1
+	stw r20, 0(r19)
+	
+	# ack the timer interrupt
+	movia et,TIMER
+	stwio r0,0(et)
+
+	br EXIT_ISR
+
+KEY_INT:
 	#reset gled to all off
 	movia r21, gled
 	movi r22, 0x0
@@ -67,6 +98,14 @@ ISR:
 		srli r21, r21, 16
 		bgt r21, r0, begin
 		
+	br EXIT_ISR
+		
+EXIT_ISR:
+	ldw et, 4(sp)
+	wrctl ctl1, et
+	ldw et, 0(sp)
+	ldw ea, 8(sp)
+	addi sp, sp, 12
 	subi ea, ea, 4
 	eret
 
@@ -82,8 +121,8 @@ keyboard_start:
 	addi r21, r0, 0x1
 	stwio r21, 4(r19)
 
-	#enable CPU interrupt from IRQ line 7
-	addi r21, r0, 128
+	#enable CPU interrupt from IRQ line 7 && IRQ line 1
+	addi r21, r0, 0x81
 	wrctl ctl3, r21
 
 	#enable cpu interrupt
