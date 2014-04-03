@@ -147,7 +147,7 @@ move_paddle_2:
 	
 	movia r16, PADDLE_2_X
 	ldw r4, 0(r16)
-	mov r15, r4
+	#mov r15, r4
 	
 	movia r16, PADDLE_2_Y
 	ldw r5, 0(r16)
@@ -165,8 +165,10 @@ move_paddle_2:
 		subi r17, r17, 1
 		
 		move_2:
-			bge r15, r17, paddle_1_draw
-			ble r15, r0, paddle_1_draw
+			bge r15, r17, paddle_2_draw
+			ble r15, r0, paddle_2_draw
+			
+			movia r16, PADDLE_2_Y
 			#addi r15, r15, -1
 			stw r15, 0(r16)
 		br paddle_2_draw
