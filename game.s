@@ -37,6 +37,9 @@
 .equ COL_WHITE, 0xffff
 .equ COL_BLACK, 0x0000
 
+.global PADDLE_1_DIR
+.global PADDLE_2_DIR
+
 .section .data
 PADDLE_1_X:
 	.word 4
