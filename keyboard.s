@@ -36,7 +36,7 @@ ISR:
 		stwio r22, 0(r23)
 		movia r19, PADDLE_1_DIR
 		addi r20, r0, 0x1
-		ldw r20, 0(r19)
+		stw r20, 0(r19)
 		br notMatched
 	player1down:
 		movia r23, gled
@@ -44,7 +44,7 @@ ISR:
 		stwio r22, 0(r23)
 		movia r19, PADDLE_1_DIR
 		subi r20, r0, 0x1
-		ldw r20, 0(r19)
+		stw r20, 0(r19)
 		br notMatched
 	player2up:
 		movia r23, gled
@@ -52,7 +52,7 @@ ISR:
 		stwio r22, 0(r23)
 		movia r19, PADDLE_2_DIR
 		addi r20, r0, 0x1
-		ldw r20, 0(r19)
+		stw r20, 0(r19)
 		br notMatched
 	player2down:
 		movia r23, gled
@@ -60,7 +60,7 @@ ISR:
 		stwio r22, 0(r23)
 		movia r19, PADDLE_1_DIR
 		subi r20, r0, 0x1
-		ldw r20, 0(r19)
+		stw r20, 0(r19)
 	
 	notMatched:
 		#check if there are still values left to read, if so go to begin
