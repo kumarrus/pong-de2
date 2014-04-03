@@ -405,7 +405,7 @@ timer_set:
 	ret
 	
 delay_counter:
-	movi r15,500000 /* set starting point for delay counter */
+	movia r15,500000 /* set starting point for delay counter */
 	DELAYG:
 		subi r15,r15,1       /* subtract 1 from delay */
 		bne r15,r0, DELAYG   /* continue subtracting if delay has not elapsed */
