@@ -22,12 +22,30 @@ ISR:
 TIMER_INT:
 	movia r19, BALL_X_SPEED
 	ldw r20, 0(r19)
+	movi r21, 1
+	bge r20, r21, positivex
+	br negativex
+positivex:
 	addi r20, r20, 0x1
+	br storex
+negativex:	
+	subi r20, r20, 0x1
+	br storex
+storex:
 	stw r20, 0(r19)
 	
 	movia r19, BALL_Y_SPEED
 	ldw r20, 0(r19)
+	movi r21, 1
+	bge r20, r21, positivey
+	br negativey
+positivey:
 	addi r20, r20, 0x1
+	br storey
+negativey:	
+	subi r20, r20, 0x1
+	br storey
+storey:
 	stw r20, 0(r19)
 	
 	# ack the timer interrupt
@@ -66,7 +84,7 @@ KEY_INT:
 		movi r22, 0x2
 		stwio r22, 0(r23)
 		movia r19, PADDLE_1_DIR
-		addi r20, r0, 0x1
+		subi r20, r0, 0x1
 		stw r20, 0(r19)
 		br notMatched
 	player1down:
@@ -74,7 +92,7 @@ KEY_INT:
 		movi r22, 0x1
 		stwio r22, 0(r23)
 		movia r19, PADDLE_1_DIR
-		subi r20, r0, 0x1
+		addi r20, r0, 0x1
 		stw r20, 0(r19)
 		br notMatched
 	player2up:
@@ -82,7 +100,7 @@ KEY_INT:
 		movi r22, 0x8
 		stwio r22, 0(r23)
 		movia r19, PADDLE_2_DIR
-		addi r20, r0, 0x1
+		subi r20, r0, 0x1
 		stw r20, 0(r19)
 		br notMatched
 	player2down:
@@ -90,7 +108,7 @@ KEY_INT:
 		movi r22, 0x4
 		stwio r22, 0(r23)
 		movia r19, PADDLE_2_DIR
-		subi r20, r0, 0x1
+		addi r20, r0, 0x1
 		stw r20, 0(r19)
 	
 	notMatched:

@@ -27,7 +27,7 @@
 #.include "nios_macros.s"
 
 .equ TIMER, 0x10002000
-.equ PERIOD, 10000000
+.equ PERIOD, 0xf00fffff
 .equ MAX_X, 320
 .equ MAX_Y, 240
 .equ SIZE_BALL_X, 3
@@ -63,7 +63,11 @@ PADDLE_1_DIR:
 	.word 1
 PADDLE_2_DIR:
 	.word -1
-
+PLAYER_1_LIFE:
+	.word 3
+PLAYER_2_LIFE:
+	.word 3
+	
 .section .text
 .global main
 .global timer
@@ -84,6 +88,10 @@ main:
 		call move_paddle_2
 		call move_ball
 	br infinite_loop
+	
+	game_over_1:
+	game_over_2:
+		br game_over_2
 	
 move_paddle_1:
 	subi sp, sp, 24
@@ -311,17 +319,33 @@ move_ball:
 			subi r17, r17, SIZE_BALL_X
 			
 			#Wall bounce
-			bge r15, r17, bounce_left
-			blt r15, r0, bounce_right
+			bge r15, r17, player_2_die
+			ble r15, r0, player_1_die
 		
 		movia r16, BALL_X
 		stw r15, 0(r16)
 		br ball_draw
 		
+		player_2_die:
+			movia r16, PLAYER_2_LIFE
+			ldw r15, 0(r16)
+			subi r15, r15, 1
+			beq r15, r0, game_over_2
+			stw r15, 0(r16)
+			br bounce_left
+
+		player_1_die:
+			movia r16, PLAYER_1_LIFE
+			ldw r15, 0(r16)
+			subi r15, r15, 1
+			beq r15, r0, game_over_1
+			stw r15, 0(r16)
+			br bounce_right
+		
 		bounce_left:	
 			movia r16, BALL_X_SPEED
-			mov r6, r0
-			movi r6, -1
+			ldw r6, 0(r16)
+			sub r6, r0, r6
 			stw r6, 0(r16)
 			
 			movia r16, BALL_X
@@ -332,8 +356,8 @@ move_ball:
 
 		bounce_right:
 			movia r16, BALL_X_SPEED
-			mov r6, r0
-			movi r6, 1
+			ldw r6, 0(r16)
+			sub r6, r0, r6 
 			stw r6, 0(r16)
 			
 			movia r16, BALL_X
@@ -405,7 +429,7 @@ timer_set:
 	ret
 	
 delay_counter:
-	movia r15,500000 /* set starting point for delay counter */
+	movia r15,50000 /* set starting point for delay counter */
 	DELAYG:
 		subi r15,r15,1       /* subtract 1 from delay */
 		bne r15,r0, DELAYG   /* continue subtracting if delay has not elapsed */

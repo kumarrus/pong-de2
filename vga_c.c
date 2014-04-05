@@ -1,3 +1,6 @@
+#define ADDR_7SEG1 ((volatile long *) 0x10000020)
+#define ADDR_7SEG2 ((volatile long *) 0x10000030)
+
 /* set a single pixel on the screen at x,y
  * x in [0,319], y in [0,239], and colour in [0,65535]
  */
@@ -15,7 +18,16 @@ void erase_screen() {
 	}
   }
 }
-
+/*
+void display_hex(int value1, int value2) {
+	// bits 0000110 will activate segments 1 and 2
+	switch(value1) {
+	case
+	}
+   *ADDR_7SEG1 = 0x00000006; 
+   *ADDR_7SEG2 = 0;
+}
+*/
 /*
 int main() {
 	__asm__( "movia sp, 0x007ffffc		#0x17fff80\n"
