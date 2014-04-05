@@ -36,6 +36,7 @@
 .equ SIZE_PADDLE_Y, 40
 .equ COL_WHITE, 0xffff
 .equ COL_BLACK, 0x0000
+.equ PUSH_BUTTONS, 0x10000050
 
 .global PADDLE_1_DIR
 .global PADDLE_2_DIR
@@ -102,6 +103,11 @@ main:
 		ldw r5, 0(r16)
 		call display_hex
 		call draw_game_over
+		
+		movia r16, PUSH_BUTTONS
+		ldwio r17, (r16)
+		movi r18, 0x2
+		beq r17, r18, main
 		br game_over_2
 	
 move_paddle_1:
@@ -341,6 +347,7 @@ move_ball:
 			movia r16, PLAYER_2_LIFE
 			ldw r15, 0(r16)
 			subi r15, r15, 1
+			#call rledUpdate
 			beq r15, r0, game_over_2
 			stw r15, 0(r16)
 			br bounce_left
@@ -349,6 +356,7 @@ move_ball:
 			movia r16, PLAYER_1_LIFE
 			ldw r15, 0(r16)
 			subi r15, r15, 1
+			#call rledUpdate
 			beq r15, r0, game_over_1
 			stw r15, 0(r16)
 			br bounce_right
