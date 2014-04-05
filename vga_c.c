@@ -18,16 +18,57 @@ void erase_screen() {
 	}
   }
 }
-/*
+
 void display_hex(int value1, int value2) {
 	// bits 0000110 will activate segments 1 and 2
 	switch(value1) {
-	case
+	case 0: *ADDR_7SEG1 = 0x00000000; 
+	break;
+	case 1: *ADDR_7SEG1 = 0x00000006; 
+	break;
+	case 2: *ADDR_7SEG1 = 0x0000005b; //01011011
+	break;
+	case 3: *ADDR_7SEG1 = 0x0000004f; //01001111 
+	break;
+	case 4: *ADDR_7SEG1 = 0x00000066; //01100110
+	break;
+	case 5: *ADDR_7SEG1 = 0x0000006d; //01101101
+	break;
+	case 6: *ADDR_7SEG1 = 0x0000007d; //01111101
+	break;
+	case 7: *ADDR_7SEG1 = 0x00000007; //00000111
+	break;
+	case 8: *ADDR_7SEG1 = 0x0000007f; //01111111
+	break;
+	case 9: *ADDR_7SEG1 = 0x0000006f; //01101111
+	break;
 	}
-   *ADDR_7SEG1 = 0x00000006; 
-   *ADDR_7SEG2 = 0;
+
+	switch(value2) {
+	case 0: *ADDR_7SEG2 = 0x00000000; 
+	break;
+	case 1: *ADDR_7SEG2 = 0x00000006; 
+	break;
+	case 2: *ADDR_7SEG2 = 0x0000005b; //01011011
+	break;
+	case 3: *ADDR_7SEG2 = 0x0000004f; //01001111 
+	break;
+	case 4: *ADDR_7SEG2 = 0x00000066; //01100110
+	break;
+	case 5: *ADDR_7SEG2 = 0x0000006d; //01101101
+	break;
+	case 6: *ADDR_7SEG2 = 0x0000007d; //01111101
+	break;
+	case 7: *ADDR_7SEG2 = 0x00000007; //00000111
+	break;
+	case 8: *ADDR_7SEG2 = 0x0000007f; //01111111
+	break;
+	case 9: *ADDR_7SEG2 = 0x0000006f; //01101111
+	break;
+	}
+	
 }
-*/
+
 /*
 int main() {
 	__asm__( "movia sp, 0x007ffffc		#0x17fff80\n"

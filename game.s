@@ -87,10 +87,21 @@ main:
 		call move_paddle_1
 		call move_paddle_2
 		call move_ball
+		movia r16, PLAYER_2_LIFE
+		ldw r4, 0(r16)
+		movia r16, PLAYER_1_LIFE
+		ldw r5, 0(r16)
+		call display_hex
 	br infinite_loop
 	
 	game_over_1:
 	game_over_2:
+		movia r16, PLAYER_2_LIFE
+		ldw r4, 0(r16)
+		movia r16, PLAYER_1_LIFE
+		ldw r5, 0(r16)
+		call display_hex
+		call draw_game_over
 		br game_over_2
 	
 move_paddle_1:
