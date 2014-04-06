@@ -36,6 +36,7 @@
 .equ SIZE_PADDLE_Y, 40
 .equ COL_WHITE, 0xffff
 .equ COL_BLACK, 0x0000
+.equ PUSH_BUTTONS, 0x10000050
 
 .global PADDLE_1_DIR
 .global PADDLE_2_DIR
@@ -102,6 +103,12 @@ main:
 		ldw r5, 0(r16)
 		call display_hex
 		#call draw_game_over
+				
+		movia r16, PUSH_BUTTONS
+		ldwio r17, (r16)
+		movi r18, 0x2
+		beq r17, r18, main
+
 		br game_over_2
 	
 move_paddle_1:
