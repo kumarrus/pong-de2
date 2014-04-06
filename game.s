@@ -101,7 +101,7 @@ main:
 		movia r16, PLAYER_1_LIFE
 		ldw r5, 0(r16)
 		call display_hex
-		call draw_game_over
+		#call draw_game_over
 		br game_over_2
 	
 move_paddle_1:
