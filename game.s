@@ -37,6 +37,7 @@
 .equ COL_WHITE, 0xffff
 .equ COL_BLACK, 0x0000
 .equ PUSH_BUTTONS, 0x10000050
+.equ AUDIO_FIFO, 0x10003040
 
 .global PADDLE_1_DIR
 .global PADDLE_2_DIR
@@ -68,6 +69,10 @@ PLAYER_1_LIFE:
 	.word 0
 PLAYER_2_LIFE:
 	.word 0
+SOUND_1:
+	.word 5
+SOUND_2:
+	.word -5
 	
 .section .text
 .global main
@@ -103,6 +108,16 @@ main:
 		movi r18, 0x2
 		beq r17, r18, exit_loop_start
 		
+		start_music:
+		movia r16, AUDIO_FIFO
+		ldwio r17, 4(r16)
+		andi r17, r17, 0xff
+		beq r17, r0, start_music
+		ldwio r17, 8(r16)
+		stwio r17, 8(r16)
+		ldwio r17, 12(r16)
+		stwio r17, 12(r16)
+			
 	br game_start
 exit_loop_start:
 	call erase_screen
@@ -119,6 +134,16 @@ exit_loop_start:
 		movia r16, PLAYER_1_LIFE
 		ldw r5, 0(r16)
 		call display_hex
+		
+		run_music:
+		movia r16, AUDIO_FIFO
+		ldwio r17, 4(r16)
+		andi r17, r17, 0xff
+		beq r17, r0, run_music
+		ldwio r17, 8(r16)
+		stwio r17, 8(r16)
+		ldwio r17, 12(r16)
+		stwio r17, 12(r16)
 	br infinite_loop
 	
 	game_over_1:
@@ -134,6 +159,16 @@ exit_loop_start:
 		movi r18, 0x2
 		beq r17, r18, main
 
+		end_music: 
+		movia r16, AUDIO_FIFO
+		ldwio r17, 4(r16)
+		andi r17, r17, 0xff
+		beq r17, r0, end_music
+		ldwio r17, 8(r16)
+		stwio r17, 8(r16)
+		ldwio r17, 12(r16)
+		stwio r17, 12(r16)
+		
 		br game_over_2
 	
 move_paddle_1:
@@ -480,3 +515,29 @@ delay_counter:
 		bne r15,r0, DELAYG   /* continue subtracting if delay has not elapsed */
 			
 	ret
+
+#tone:
+#movia r19, AUDIO_FIFO
+#movia r20, SOUND_1
+#movi r21, 0xFFF
+#movi r16, 0xFFF
+#movi r22, 0
+#movi r23, 0 
+
+#ldwio r20, 8(r19)
+#ldwio r20, 12(r19)
+#addi r22, r22, 0x1
+#bleu r22, r21, tone
+#movi r22, 0
+
+#tone2:
+#movia r20, SOUND_2
+#ldwio r20, 8(r19)
+#ldwio r20, 12(r19)
+#addi r22, r22, 0x1
+#bleu r22, r21, tone2
+
+#addi r23, r23, 0x1
+#bleu r23, r16, tone
+
+#ret
