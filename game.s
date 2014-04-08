@@ -27,7 +27,7 @@
 #.include "nios_macros.s"
 
 .equ TIMER, 0x10002000
-.equ PERIOD, 0xf00fffff
+.equ PERIOD, 500000000
 .equ MAX_X, 320
 .equ MAX_Y, 240
 .equ SIZE_BALL_X, 3
@@ -65,9 +65,9 @@ PADDLE_1_DIR:
 PADDLE_2_DIR:
 	.word -1
 PLAYER_1_LIFE:
-	.word 3
+	.word 0
 PLAYER_2_LIFE:
-	.word 3
+	.word 0
 	
 .section .text
 .global main
@@ -79,11 +79,37 @@ PLAYER_2_LIFE:
 main:
 	
 	movia sp, 0x007ffffc		#0x17fff80
-	call erase_screen
 	movi r4, 0
 	movi r5, 0
 	call timer_set
 	call keyboard_start
+	movia r16, PLAYER_1_LIFE
+	ldw r15, 0(r16)
+	addi r15, r0, 6
+	stw r15, 0(r16)
+	movia r16, PLAYER_2_LIFE
+	ldw r15, 0(r16)
+	addi r15, r0, 6
+	stw r15, 0(r16)
+	call erase_screen
+	call erase_char_buffer
+	call delay_counter
+	movi r4, 0
+	movi r5, 0
+	game_start:
+		call draw_game_start
+		movia r16, PUSH_BUTTONS
+		ldwio r17, 0(r16)
+		movi r18, 0x2
+		beq r17, r18, exit_loop_start
+		
+	br game_start
+exit_loop_start:
+	call erase_screen
+	call erase_char_buffer
+	call delay_counter
+	movi r4, 0
+	movi r5, 0
 	infinite_loop:
 		call move_paddle_1
 		call move_paddle_2
@@ -101,11 +127,10 @@ main:
 		ldw r4, 0(r16)
 		movia r16, PLAYER_1_LIFE
 		ldw r5, 0(r16)
-		call display_hex
-		#call draw_game_over
+		call draw_game_over
 				
 		movia r16, PUSH_BUTTONS
-		ldwio r17, (r16)
+		ldwio r17, 0(r16)
 		movi r18, 0x2
 		beq r17, r18, main
 
@@ -363,7 +388,8 @@ move_ball:
 		bounce_left:	
 			movia r16, BALL_X_SPEED
 			ldw r6, 0(r16)
-			sub r6, r0, r6
+			movi r6, -1
+			#sub r6, r0, r6
 			stw r6, 0(r16)
 			
 			movia r16, BALL_X
@@ -375,7 +401,8 @@ move_ball:
 		bounce_right:
 			movia r16, BALL_X_SPEED
 			ldw r6, 0(r16)
-			sub r6, r0, r6 
+			movi r6, 1
+			#sub r6, r0, r6 
 			stw r6, 0(r16)
 			
 			movia r16, BALL_X

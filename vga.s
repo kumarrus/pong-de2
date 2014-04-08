@@ -29,7 +29,7 @@
 .equ COL_BLACK, 0x0000
 
 .global draw_rect
-
+#.global draw_game_over
 #---------------------------------------------------#
 #.global erase_screen
 #
@@ -116,3 +116,16 @@ draw_rect:
 	#
 	
 	ret
+	
+
+#draw_game_over:
+#	subi sp, sp, 4
+#	stw ra, 0(sp)
+#	
+#	movi r4, 150
+#	movi r5, 115
+#	movi r6, 0x47
+#	call write_char
+#	ldw ra, 0(sp)
+#	addi sp, sp, 4
+#	ret

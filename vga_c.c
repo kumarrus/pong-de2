@@ -9,6 +9,15 @@ void write_pixel(int x, int y, short colour) {
   *vga_addr=colour;
 }
 
+/* write a single character to the character buffer at x,y
+ * x in [0,79], y in [0,59]
+ */
+void write_char(int x, int y, char c) {
+  // VGA character buffer
+  volatile char * character_buffer = (char *) (0x09000000 + (y<<7) + x);
+  *character_buffer = c;
+}
+
 /* use write_pixel to set entire screen to black (does not clear the character buffer) */
 void erase_screen() {
   int x, y;
@@ -17,6 +26,55 @@ void erase_screen() {
 	  write_pixel(x,y,0);
 	}
   }
+}
+
+void erase_char_buffer() {
+  int x, y;
+  for (x = 0; x < 320; x++) {
+    for (y = 0; y < 240; y++) {
+	  write_char(x,y,0);
+	}
+  }
+}
+
+void draw_game_over() {
+   char* hw = "GAME OVER!";
+   int x = 35;
+   int y = 27;
+   while (*hw) {
+     write_char(x, y, *hw);
+	 x++;
+	 hw++;
+   }
+   
+   char* hw2 = "Press Restart Button";
+   int x2 = 30;
+   int y2 = 30;
+   while (*hw2) {
+     write_char(x2, y2, *hw2);
+	 x2++;
+	 hw2++;
+   }
+}
+
+void draw_game_start() {
+   char* hw = "-PONG-";
+   int x = 35;
+   int y = 27;
+   while (*hw) {
+     write_char(x, y, *hw);
+	 x++;
+	 hw++;
+   }
+   
+   char* hw2 = "Press Start Button";
+   int x2 = 30;
+   int y2 = 30;
+   while (*hw2) {
+     write_char(x2, y2, *hw2);
+	 x2++;
+	 hw2++;
+   }
 }
 
 void display_hex(int value1, int value2) {
